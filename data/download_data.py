@@ -5,6 +5,10 @@ dataset = load_dataset("GEM/wiki_lingua", "en")           # English articles -> 
 dataset_fr = load_dataset("GEM/wiki_lingua", "fr")        # French articles -> French summaries
 dataset_cross = load_dataset("GEM/wiki_lingua", "fr_en")  # French articles -> English summaries
 
+
+######## Add Hindi as a smaller dataset ######## ????
+### make this neater ???
+
 train = dataset["train"]
 val = dataset["validation"]
 test = dataset["test"]
