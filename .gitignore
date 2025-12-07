@@ -1,0 +1,10 @@
+.env
+*.pyc
+*.csv
+*.csv
+*.csv
+*.csv
+*.csv
+data/train.csv
+data/test_fr.csv
+data/test_cross.csv
