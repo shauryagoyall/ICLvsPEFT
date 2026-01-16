@@ -5,20 +5,10 @@ import pandas as pd
 import random
 from tqdm import tqdm
 from download_model import download_model
-from metrics import compute_scores, save_scores 
+from metrics import compute_scores, save_scores
+from utils import get_system_prompt, get_bertscore_language
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-
-def get_system_prompt(task_type):
-    """Returns the system prompt based on the specific task."""
-    if task_type == "english":
-        return "You are a helpful assistant. Summarize the following text in English."
-    elif task_type == "french":
-        return "You are a helpful assistant. Summarize the following text in French."
-    elif task_type == "crosslingual":
-        return "You are a helpful assistant. Summarize the following French text in English."
-    else:
-        raise ValueError("Unknown task type")
 
 def construct_few_shot_messages(source_text, task_type, train_df, k_shots):
     """
@@ -112,9 +102,6 @@ def run_experiment(model, tokenizer, test_files, train_files, k_shots):
         test_df = pd.read_csv(test_path)
         train_df = pd.read_csv(train_path)
 
-        # testing
-        test_df = test_df.sample(4, random_state=42) 
-
         sources = test_df["source"].tolist()
         references = test_df["target"].tolist()
 
@@ -122,7 +109,8 @@ def run_experiment(model, tokenizer, test_files, train_files, k_shots):
         predictions = generate_summaries_llama(sources, model, tokenizer, task_type, train_df, k_shots)
 
         # Compute Scores
-        scores = compute_scores(predictions, references)
+        lang = get_bertscore_language(task_type)
+        scores = compute_scores(predictions, references, lang=lang)
         print(f"{name} Scores: {scores}")
 
         # Save results

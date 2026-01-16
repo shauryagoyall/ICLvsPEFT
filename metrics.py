@@ -3,7 +3,7 @@ import numpy as np
 from rouge_score import rouge_scorer
 from bert_score import score as bert_score
 
-def compute_scores(predictions, references):
+def compute_scores(predictions, references, lang="en"):
     scorer = rouge_scorer.RougeScorer(["rouge1", "rouge2", "rougeL"], use_stemmer=True)
     scores = {"ROUGE-1": [], "ROUGE-2": [], "ROUGE-L": [], "BERT-F1": []}
     
@@ -14,8 +14,8 @@ def compute_scores(predictions, references):
         scores["ROUGE-2"].append(rouge_scores["rouge2"].fmeasure)
         scores["ROUGE-L"].append(rouge_scores["rougeL"].fmeasure)
     
-    # Compute BERTScore F1
-    P, R, F1 = bert_score(predictions, references, lang="en", rescale_with_baseline=True)
+    # Compute BERTScore F1 with specified language
+    P, R, F1 = bert_score(predictions, references, lang=lang, rescale_with_baseline=True)
     scores["BERT-F1"].extend(F1.tolist())
     
     return {key: np.mean(value) for key, value in scores.items()}

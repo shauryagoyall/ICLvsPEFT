@@ -12,18 +12,9 @@ from transformers import (
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from download_model import download_model
 from config import hf_token
+from utils import get_system_prompt
 
 login(token=hf_token)
-
-def get_system_prompt(task_type):
-    if task_type == "english":
-        return "You are a helpful assistant. Summarize the following text in English."
-    elif task_type == "french":
-        return "You are a helpful assistant. Summarize the following text in French."
-    elif task_type == "crosslingual":
-        return "You are a helpful assistant. Summarize the following French text in English."
-    else:
-        raise ValueError("Unknown task type")
 
 def formatting_func(example, tokenizer, task_type, max_length=2048):
     system_prompt = get_system_prompt(task_type)
@@ -68,7 +59,7 @@ def formatting_func(example, tokenizer, task_type, max_length=2048):
         "labels": labels
     }
 
-def fine_tune(finetune_type, num_samples):
+def fine_tune(finetune_type, num_samples, push_to_hub=False, hub_model_name=None):
     print(f"Starting Fine-tuning for: {finetune_type} with {num_samples} samples")
 
     data_dir = "data"
@@ -76,7 +67,7 @@ def fine_tune(finetune_type, num_samples):
     if finetune_type == "english":
         train_path = os.path.join(data_dir, "train.csv")
         val_path = os.path.join(data_dir, "val.csv")
-    elif finetune_type == "multilingual":
+    elif finetune_type == "french":
         train_path = os.path.join(data_dir, "train_fr.csv")
         val_path = os.path.join(data_dir, "val_fr.csv")
     elif finetune_type == "crosslingual":
@@ -100,8 +91,9 @@ def fine_tune(finetune_type, num_samples):
     eval_dataset = Dataset.from_pandas(val_df)
 
     print("Loading model...")
-    model, tokenizer = download_model()
+    model, tokenizer = download_model(quantize=True)
     
+    tokenizer.padding_side = "left"
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
     
@@ -155,13 +147,28 @@ def fine_tune(finetune_type, num_samples):
     print(f"Saving model to {output_dir}...")
     trainer.save_model(output_dir)
     tokenizer.save_pretrained(output_dir)
+    
+    # Push to HuggingFace Hub if requested
+    if push_to_hub:
+        if hub_model_name is None:
+            size_str = f"{num_samples}samples" if num_samples > 0 else "full"
+            hub_model_name = f"shauryagoyall/llama-3.2-1b-{finetune_type}-{size_str}"
+        
+        print(f"Pushing model to HuggingFace Hub as {hub_model_name}...")
+        model.push_to_hub(hub_model_name, use_auth_token=True)
+        tokenizer.push_to_hub(hub_model_name, use_auth_token=True)
+        print(f" Model successfully pushed to hub: {hub_model_name}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--finetune_type", type=str, required=True, 
-                        choices=["english", "multilingual", "crosslingual"])
+                        choices=["english", "french", "crosslingual"])
     parser.add_argument("--num_samples", type=int, default=0, 
                         help="Number of training samples to use. 0 for full dataset.")
+    parser.add_argument("--push_to_hub", action="store_true",
+                        help="Push the fine-tuned model to HuggingFace Hub.")
+    parser.add_argument("--hub_model_name", type=str, default=None,
+                        help="Custom name for the model on HuggingFace Hub.")
     args = parser.parse_args()
     
-    fine_tune(args.finetune_type, args.num_samples)
+    fine_tune(args.finetune_type, args.num_samples, args.push_to_hub, args.hub_model_name)
