@@ -30,7 +30,7 @@ def construct_few_shot_messages(source_text, task_type, train_df, k_shots):
     
     return messages
 
-def generate_summaries_llama(texts, model, tokenizer, task_type, train_df, k_shots, batch_size=4):
+def generate_summaries_llama(texts, model, tokenizer, task_type, train_df, k_shots, batch_size=10):
     """
     Generates summaries using Llama 3.2 Instruct with few-shot prompting.
     """
