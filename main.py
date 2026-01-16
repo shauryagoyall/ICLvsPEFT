@@ -98,8 +98,8 @@ def run_experiment(model, tokenizer, test_files, train_files, k_shots):
     print(f"\n--- Running {k_shots}-Shot Evaluation ---")
 
     experiments = [
-        ("English", "english", test_files["english"], train_files["english"]),
-        ("French", "french", test_files["french"], train_files["french"]),
+        # ("English", "english", test_files["english"], train_files["english"]),
+        # ("French", "french", test_files["french"], train_files["french"]),
         ("Cross-lingual", "crosslingual", test_files["crosslingual"], train_files["crosslingual"]),
     ]
 
@@ -113,7 +113,7 @@ def run_experiment(model, tokenizer, test_files, train_files, k_shots):
         train_df = pd.read_csv(train_path)
 
         # testing
-        test_df = test_df.sample(50, random_state=42) 
+        test_df = test_df.sample(4, random_state=42) 
 
         sources = test_df["source"].tolist()
         references = test_df["target"].tolist()

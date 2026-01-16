@@ -8,3 +8,4 @@
 data/train.csv
 data/test_fr.csv
 data/test_cross.csv
+*.csv
