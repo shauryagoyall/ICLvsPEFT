@@ -88,8 +88,8 @@ def run_experiment(model, tokenizer, test_files, train_files, k_shots):
     print(f"\n--- Running {k_shots}-Shot Evaluation ---")
 
     experiments = [
-        # ("English", "english", test_files["english"], train_files["english"]),
-        # ("French", "french", test_files["french"], train_files["french"]),
+        ("English", "english", test_files["english"], train_files["english"]),
+        ("French", "french", test_files["french"], train_files["french"]),
         ("Cross-lingual", "crosslingual", test_files["crosslingual"], train_files["crosslingual"]),
     ]
 
