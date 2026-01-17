@@ -126,7 +126,7 @@ def fine_tune(finetune_type, num_samples, push_to_hub=False, hub_model_name=None
         learning_rate=2e-4,
         num_train_epochs=3,
         logging_steps=10,
-        evaluation_strategy="steps",
+        eval_strategy="steps",
         eval_steps=50, # Evaluate more often for small datasets
         save_strategy="epoch",
         fp16=True,
