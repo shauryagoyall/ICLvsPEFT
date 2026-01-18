@@ -119,7 +119,7 @@ def run_experiment(model, tokenizer, test_files, train_files, k_shots):
 
 def main():
     parser = argparse.ArgumentParser(description="Evaluate Llama 3.2 1B on summarization tasks.")
-    parser.add_argument("--shots", type=int, default=0, choices=[0, 1, 2, 3, 5], help="Number of ICL shots (0, 1, 2, 3, 5)")
+    parser.add_argument("--shots", type=int, default=0, choices=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ], help="Number of ICL shots (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)")
     args = parser.parse_args()
 
     # Load Model
