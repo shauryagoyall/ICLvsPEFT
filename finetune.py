@@ -111,6 +111,7 @@ def fine_tune(finetune_type, num_samples, push_to_hub=False, hub_model_name=None
     )
     
     model = prepare_model_for_kbit_training(model)
+    model.gradient_checkpointing_enable()  # Enable gradient checkpointing for memory efficiency
     model = get_peft_model(model, peft_config)
     model.print_trainable_parameters()
 
@@ -120,17 +121,20 @@ def fine_tune(finetune_type, num_samples, push_to_hub=False, hub_model_name=None
     
     training_args = TrainingArguments(
         output_dir=output_dir,
-        per_device_train_batch_size=2,
-        per_device_eval_batch_size=2,
-        gradient_accumulation_steps=4,
+        per_device_train_batch_size=8,  # Increased from 2 (P100 can handle this)
+        per_device_eval_batch_size=8,   # Increased from 2
+        gradient_accumulation_steps=1,  # Reduced from 4 (no longer needed with larger batch)
         learning_rate=2e-4,
-        num_train_epochs=3,
+        num_train_epochs=1,             # Reduced from 3 (single epoch for speed)
         logging_steps=10,
         eval_strategy="steps",
-        eval_steps=50, # Evaluate more often for small datasets
-        save_strategy="epoch",
+        eval_steps=200,                 # Increased from 50 (evaluate less frequently)
+        save_strategy="steps",          # Changed from "epoch"
+        save_steps=200,                 # Save less frequently
         fp16=True,
-        report_to="none"
+        report_to="none",
+        optim="paged_adamw_8bit",       # More efficient optimizer
+        gradient_checkpointing=True,    # Reduces memory for larger batches
     )
 
     trainer = Trainer(
