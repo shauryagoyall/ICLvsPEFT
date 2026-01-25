@@ -128,9 +128,9 @@ def fine_tune(finetune_type, num_samples, push_to_hub=False, hub_model_name=None
         num_train_epochs=1,             # Reduced from 3 (single epoch for speed)
         logging_steps=10,
         eval_strategy="steps",
-        eval_steps=200,                 # Increased from 50 (evaluate less frequently)
+        eval_steps=1000,                 # Increased from 50 (evaluate less frequently)
         save_strategy="steps",          # Changed from "epoch"
-        save_steps=200,                 # Save less frequently
+        save_steps=1000,                 # Save less frequently
         fp16=True,
         report_to="none",
         optim="paged_adamw_8bit",       # More efficient optimizer
