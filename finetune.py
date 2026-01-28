@@ -121,20 +121,20 @@ def fine_tune(finetune_type, num_samples, push_to_hub=False, hub_model_name=None
     
     training_args = TrainingArguments(
         output_dir=output_dir,
-        per_device_train_batch_size=2,  # Increased from 2 (P100 can handle this)
-        per_device_eval_batch_size=2,   # Increased from 2
-        gradient_accumulation_steps=4,  # Reduced from 4 (no longer needed with larger batch)
+        per_device_train_batch_size=2,  
+        per_device_eval_batch_size=2,   
+        gradient_accumulation_steps=4,  
         learning_rate=2e-4,
-        num_train_epochs=1,             # Reduced from 3 (single epoch for speed)
+        num_train_epochs=1,             
         logging_steps=10,
         eval_strategy="steps",
-        eval_steps=1000,                 # Increased from 50 (evaluate less frequently)
-        save_strategy="steps",          # Changed from "epoch"
-        save_steps=1000,                 # Save less frequently
+        eval_steps=1000,                 
+        save_strategy="steps",          
+        save_steps=1000,                 
         fp16=True,
         report_to="none",
-        optim="paged_adamw_8bit",       # More efficient optimizer
-        gradient_checkpointing=True,    # Reduces memory for larger batches
+        optim="paged_adamw_8bit",       
+        gradient_checkpointing=True,    
     )
 
     trainer = Trainer(
