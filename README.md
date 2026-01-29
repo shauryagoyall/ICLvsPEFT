@@ -121,7 +121,7 @@ Results are saved to `rouge_results.csv` with columns:
 
 - **Base Model**: Meta-Llama-3.2-1B-Instruct
 - **Quantization**: 4-bit (BitsAndBytes) for efficient memory usage
-- **LoRA Configuration**: Rank=8, Alpha=16, Target modules=all linear layers
+- **LoRA Configuration**: Rank=16, Alpha=32, Target modules=all linear layers
 - **Max Sequence Length**: 2048 tokens
 
 ## Results
