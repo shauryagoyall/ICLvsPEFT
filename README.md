@@ -30,7 +30,6 @@ The study covers three language configurations:
 │   ├── train_fr.csv, val_fr.csv, test_fr.csv # French dataset
 │   ├── train_cross.csv, val_cross.csv, test_cross.csv # Crosslingual dataset
 │   └── download_data.py             # Data download utility
-├── llama-3.2-1b-*-*samples/         # Pre-trained LoRA adapters for different configurations
 └── requirements.txt                 # Python dependencies
 ```
 
@@ -92,12 +91,12 @@ python finetune.py --finetune_type crosslingual --num_samples 1000
 
 ### Evaluating Fine-Tuned Models
 
-Evaluate pre-trained LoRA adapters:
+Pre-trained LoRA adapters are available on HuggingFace at [shauryagoyall](https://huggingface.co/shauryagoyall). Download and evaluate them:
 
 ```bash
-python evaluate_finetuned.py --adapter_path llama-3.2-1b-english-1000samples --task_type english
-python evaluate_finetuned.py --adapter_path llama-3.2-1b-french-5000samples --task_type french
-python evaluate_finetuned.py --adapter_path llama-3.2-1b-crosslingual-1000samples --task_type crosslingual
+python evaluate_finetuned.py --adapter_path shauryagoyall/llama-3.2-1b-english-1000samples --task_type english
+python evaluate_finetuned.py --adapter_path shauryagoyall/llama-3.2-1b-french-5000samples --task_type french
+python evaluate_finetuned.py --adapter_path shauryagoyall/llama-3.2-1b-crosslingual-1000samples --task_type crosslingual
 ```
 
 **Arguments:**
