@@ -72,7 +72,7 @@ python main.py --task_type crosslingual --k_shots 5
 
 **Arguments:**
 - `--task_type`: Task type (`english`, `french`, or `crosslingual`)
-- `--k_shots`: Number of few-shot examples (default: 5)
+- `--k_shots`: Number of few-shot examples (default: 0)
 
 ### Fine-Tuning with LoRA
 
@@ -86,7 +86,7 @@ python finetune.py --finetune_type crosslingual --num_samples 1000
 
 **Arguments:**
 - `--finetune_type`: Type of fine-tuning (`english`, `french`, or `crosslingual`)
-- `--num_samples`: Number of training samples to use
+- `--num_samples`: Number of training samples to use (default: all samples)
 - `--push_to_hub`: Upload trained adapter to HuggingFace (optional)
 
 ### Evaluating Fine-Tuned Models
