@@ -102,8 +102,8 @@ def fine_tune(finetune_type, num_samples, push_to_hub=False, hub_model_name=None
     tokenized_eval = eval_dataset.map(lambda x: formatting_func(x, **fn_kwargs), batched=False)
 
     peft_config = LoraConfig(
-        r=16,
-        lora_alpha=32,
+        r=8,
+        lora_alpha=16,
         lora_dropout=0.05,
         bias="none",
         task_type="CAUSAL_LM",
@@ -124,13 +124,13 @@ def fine_tune(finetune_type, num_samples, push_to_hub=False, hub_model_name=None
         per_device_train_batch_size=2,  
         per_device_eval_batch_size=2,   
         gradient_accumulation_steps=4,  
-        learning_rate=2e-4,
-        num_train_epochs=1,             
+        learning_rate=1e-4,
+        num_train_epochs=5,             
         logging_steps=10,
         eval_strategy="steps",
-        eval_steps=1000,                 
+        eval_steps=200,                 
         save_strategy="steps",          
-        save_steps=1000,                 
+        save_steps=200,                 
         fp16=True,
         report_to="none",
         optim="paged_adamw_8bit",       
